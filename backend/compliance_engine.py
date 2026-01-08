@@ -189,19 +189,19 @@ class ComplianceEngine:
             financial_impact = excess_co2_tons * 100
         
         return {
-            'vessel1_id': vessel1_id,
-            'vessel2_id': vessel2_id,
-            'vessel1_status': vessel1['compliance_status'],
-            'vessel2_status': vessel2['compliance_status'],
-            'vessel1_balance': vessel1['compliance_balance'],
-            'vessel2_balance': vessel2['compliance_balance'],
-            'combined_balance': combined_balance,
-            'weighted_intensity': weighted_intensity,
-            'target_intensity': target_intensity,
-            'pooling_successful': pooling_successful,
-            'excess_co2_tons': excess_co2_tons,
-            'financial_impact': financial_impact,
-            'savings': vessel1['financial_impact'] + vessel2['financial_impact'] - financial_impact
+            'vessel1_id': str(vessel1_id),
+            'vessel2_id': str(vessel2_id),
+            'vessel1_status': str(vessel1['compliance_status']),
+            'vessel2_status': str(vessel2['compliance_status']),
+            'vessel1_balance': float(vessel1['compliance_balance']),
+            'vessel2_balance': float(vessel2['compliance_balance']),
+            'combined_balance': float(combined_balance),
+            'weighted_intensity': float(weighted_intensity),
+            'target_intensity': float(target_intensity),
+            'pooling_successful': bool(pooling_successful),
+            'excess_co2_tons': float(excess_co2_tons),
+            'financial_impact': float(financial_impact),
+            'savings': float(vessel1['financial_impact'] + vessel2['financial_impact'] - financial_impact)
         }
     
     def identify_optimal_pools(self, compliance_df: pd.DataFrame, 
