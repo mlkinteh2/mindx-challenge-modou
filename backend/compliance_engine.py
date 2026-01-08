@@ -165,7 +165,6 @@ class ComplianceEngine:
         vessel2 = compliance_df[compliance_df['ship_id'] == vessel2_id].iloc[0]
         
         # Calculate combined compliance balance
-        combined_balance = vessel1['compliance_balance'] + vessel2['compliance_balance']
         combined_distance = vessel1['total_distance'] + vessel2['total_distance']
         
         # Calculate weighted average intensity
@@ -178,6 +177,9 @@ class ComplianceEngine:
         # Determine if pooling achieves compliance
         target_intensity = vessel1['target_intensity']
         pooling_successful = weighted_intensity <= target_intensity
+        
+        # Calculate combined balance (weighted - target)
+        combined_balance = weighted_intensity - target_intensity
         
         # Calculate financial impact
         if pooling_successful:
@@ -201,7 +203,7 @@ class ComplianceEngine:
             'pooling_successful': bool(pooling_successful),
             'excess_co2_tons': float(excess_co2_tons),
             'financial_impact': float(financial_impact),
-            'savings': float(vessel1['financial_impact'] + vessel2['financial_impact'] - financial_impact)
+            'savings': float(max(0, vessel1['financial_impact']) + max(0, vessel2['financial_impact']) - financial_impact)
         }
     
     def identify_optimal_pools(self, compliance_df: pd.DataFrame, 

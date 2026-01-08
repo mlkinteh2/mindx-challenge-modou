@@ -415,7 +415,10 @@ function displayPoolingResult(result) {
             
             <div class="result-metric">
                 <div class="result-metric-label">Combined Balance</div>
-                <div class="result-metric-value">${result.combined_balance.toFixed(2)}</div>
+                <div class="result-metric-value" style="color: ${result.combined_balance < 0 ? 'var(--success)' : 'var(--danger)'};">
+                    ${result.combined_balance < 0 ? 'Surplus: ' : 'Deficit: '}
+                    ${Math.abs(result.combined_balance).toFixed(2)}
+                </div>
                 <div style="font-size: 0.75rem; color: var(--gray); margin-top: 0.25rem;">gCO₂/mile</div>
             </div>
             
