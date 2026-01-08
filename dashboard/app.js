@@ -71,7 +71,11 @@ async function loadComplianceSummary() {
         document.getElementById('total-vessels').textContent = data.total_vessels;
         document.getElementById('surplus-vessels').textContent = data.surplus_vessels;
         document.getElementById('deficit-vessels').textContent = data.deficit_vessels;
-        document.getElementById('financial-impact').textContent = formatCurrency(data.total_financial_impact);
+        const impact = data.total_financial_impact;
+        const impactElement = document.getElementById('financial-impact');
+        impactElement.textContent = `${impact < 0 ? 'Credit ' : 'Penalty '} ${formatCurrency(Math.abs(impact))}`;
+        impactElement.parentElement.querySelector('.stat-icon').style.background = impact < 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+        impactElement.parentElement.querySelector('.stat-icon').style.color = impact < 0 ? 'var(--success)' : 'var(--danger)';
 
         // Create liability chart
         createLiabilityChart(data);
@@ -202,11 +206,17 @@ function createVesselCard(vessel) {
             </div>
             <div class="metric-row">
                 <span class="metric-label">Compliance Balance</span>
-                <span class="metric-value">${vessel.compliance_balance.toFixed(2)}</span>
+                <span class="metric-value" style="color: ${vessel.compliance_balance < 0 ? 'var(--success)' : 'var(--danger)'}">
+                    ${vessel.compliance_balance < 0 ? 'Surplus ' : 'Deficit '}
+                    ${Math.abs(vessel.compliance_balance).toFixed(2)}
+                </span>
             </div>
             <div class="metric-row">
                 <span class="metric-label">Financial Impact</span>
-                <span class="metric-value">${formatCurrency(vessel.financial_impact)}</span>
+                <span class="metric-value" style="color: ${vessel.financial_impact < 0 ? 'var(--success)' : 'var(--danger)'}">
+                    ${vessel.financial_impact < 0 ? 'Credit ' : 'Penalty '}
+                    ${Math.abs(vessel.financial_impact).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 })}
+                </span>
             </div>
         </div>
     `;
@@ -326,7 +336,13 @@ function updateVesselInfo(vesselInputId, vesselId) {
         infoDiv.innerHTML = `
             <div><strong>Type:</strong> ${vessel.ship_type}</div>
             <div><strong>GHG Intensity:</strong> ${vessel.ghg_intensity.toFixed(2)} gCO₂/mile</div>
-            <div><strong>Balance:</strong> ${vessel.compliance_balance.toFixed(2)}</div>
+            <div>
+                <strong>Balance:</strong> 
+                <span style="color: ${vessel.compliance_balance < 0 ? 'var(--success)' : 'var(--danger)'}">
+                    ${vessel.compliance_balance < 0 ? 'Surplus ' : 'Deficit '}
+                    ${Math.abs(vessel.compliance_balance).toFixed(2)}
+                </span>
+            </div>
         `;
     }
 }
