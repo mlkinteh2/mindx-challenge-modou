@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# Project specific
+backend/models/*.pkl
+backend/data/*.csv
+# Exception for the specific dataset if we want to track it (optional, but usually gitignore data)
+!backend/data/mindx test dataset.csv
+
+# OS
+.DS_Store
+Thumbs.db
