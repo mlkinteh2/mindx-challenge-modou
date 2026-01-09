@@ -35,7 +35,7 @@ mindx-challenge-modou/
 │   ├── anomaly_detection.py         # Anomaly analysis script
 │   ├── anomaly_analysis.png         # Visualization
 │   ├── ng008_anomaly_scatter.png    # Highlighted outlier scatter plot
-│   └── Technical_Memo.md            # Final technical research report
+│   
 └── README.md
 ```
 
@@ -300,3 +300,4 @@ For questions or feedback about this project, please reach out through the MIND 
 
 
 **Built with ❤️ for a sustainable maritime future** 🌊
+
