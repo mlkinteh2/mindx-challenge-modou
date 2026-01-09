@@ -300,10 +300,10 @@ async def get_routes():
 
 
 if __name__ == "__main__":
-    print("🚀 Starting MIND X Compliance API Server...")
-    print("📊 API Documentation: http://localhost:8000/docs")
-    print("🔍 Health Check: http://localhost:8000/health")
-    print("\n✨ MIND X Maritime Compliance System")
+    print("Starting MIND X Compliance API Server...")
+    print("API Documentation: http://localhost:8001/docs")
+    print("Health Check: http://localhost:8001/health")
+    print("\nMIND X Maritime Compliance System")
     print("   - Task A: Compliance Engine with ML predictions")
     print("   - Task B: Fleet Arbitrage Dashboard integration")
     print("   - Task C: Anomaly detection and analysis\n")

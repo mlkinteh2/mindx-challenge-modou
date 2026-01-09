@@ -1,0 +1,1 @@
+Vessel ID: NG008\nShip Type: Tanker Ship\nDeviation: 55.3%\nDistance: 497.16\nFuel: 24648.52\nWeather: Calm\n

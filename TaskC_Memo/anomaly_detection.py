@@ -110,56 +110,74 @@ print("DETAILED ANALYSIS: TOP ANOMALY")
 print("="*80)
 
 # Find the most extreme anomaly
+# Find the most extreme anomaly
 if len(anomalies) > 0:
     top_anomaly = max(anomalies, key=lambda x: abs(x['fuel_deviation_pct']))
-    
-    print(f"\n🚨 CRITICAL ANOMALY IDENTIFIED:")
-    print(f"  Vessel ID: {top_anomaly['ship_id']}")
-    print(f"  Ship Type: {top_anomaly['ship_type']}")
-    print(f"  Month: {top_anomaly['month']}")
-    print(f"  Route: {top_anomaly['route_id']}")
-    print(f"  Distance: {top_anomaly['distance']:.2f} nautical miles")
-    print(f"  Fuel Consumption: {top_anomaly['fuel_consumption']:.2f} units")
-    print(f"  Expected Fuel: {top_anomaly['expected_fuel']:.2f} units")
-    print(f"  Deviation: {top_anomaly['fuel_deviation_pct']:.1f}%")
-    print(f"  CO2 Emissions: {top_anomaly['CO2_emissions']:.2f} kg")
-    print(f"  Weather: {top_anomaly['weather_conditions']}")
-    print(f"  Engine Efficiency: {top_anomaly['engine_efficiency']:.2f}%")
-    
-    # Physical reasoning
-    print(f"\n🔬 PHYSICAL REASONING:")
-    
-    if top_anomaly['fuel_deviation_pct'] > 0:
-        print(f"  This vessel consumed {abs(top_anomaly['fuel_deviation_pct']):.1f}% MORE fuel than expected.")
-        print(f"\n  Possible Causes:")
-        print(f"  1. HULL BIOFOULING:")
-        print(f"     - Marine organism growth on hull increases friction")
-        print(f"     - Can increase fuel consumption by 20-60%")
-        print(f"     - Requires regular hull cleaning and maintenance")
-        print(f"\n  2. PARAMETRIC ROLLING:")
-        print(f"     - Dangerous rolling motion in head/following seas")
-        print(f"     - Causes significant speed loss and fuel waste")
-        print(f"     - Weather: {top_anomaly['weather_conditions']}")
-        print(f"\n  3. ENGINE DEGRADATION:")
-        print(f"     - Engine efficiency: {top_anomaly['engine_efficiency']:.2f}%")
-        print(f"     - Worn components reduce combustion efficiency")
-        print(f"     - Requires maintenance and overhaul")
-        print(f"\n  4. ADVERSE WEATHER CONDITIONS:")
-        print(f"     - Weather: {top_anomaly['weather_conditions']}")
-        print(f"     - High waves and wind increase resistance")
-        print(f"     - May require speed reduction or route deviation")
-    else:
-        print(f"  This vessel consumed {abs(top_anomaly['fuel_deviation_pct']):.1f}% LESS fuel than expected.")
-        print(f"\n  Possible Causes:")
-        print(f"  1. OPTIMAL ROUTING:")
-        print(f"     - Favorable currents and weather conditions")
-        print(f"     - Efficient route planning")
-        print(f"\n  2. RECENT MAINTENANCE:")
-        print(f"     - Clean hull with minimal biofouling")
-        print(f"     - Well-maintained engine systems")
-        print(f"\n  3. DATA QUALITY ISSUE:")
-        print(f"     - Potential sensor error or data entry mistake")
-        print(f"     - Requires verification")
+else:
+    # Fallback: Just get the max positive deviation in the whole dataset
+    df['fuel_deviation'] = df['fuel_consumption'] - (df['distance'] * (df['fuel_consumption'].mean() / df['distance'].mean())) # Approximate
+    idx = df['fuel_deviation'].idxmax()
+    top_anomaly = df.iloc[idx]
+    # Re-calculate expected for this specific one for reporting
+    top_anomaly['expected_fuel'] = top_anomaly['fuel_consumption'] - top_anomaly['fuel_deviation']
+    top_anomaly['fuel_deviation_pct'] = (top_anomaly['fuel_deviation'] / top_anomaly['expected_fuel']) * 100
+    print("Fallback to max deviation in dataset.")
+
+with open('TaskC_Memo/outlier_details.txt', 'w') as f:
+    f.write(f"Vessel ID: {top_anomaly['ship_id']}\\n")
+    f.write(f"Ship Type: {top_anomaly['ship_type']}\\n")
+    f.write(f"Deviation: {top_anomaly['fuel_deviation_pct']:.1f}%\\n")
+    f.write(f"Distance: {top_anomaly['distance']:.2f}\\n")
+    f.write(f"Fuel: {top_anomaly['fuel_consumption']:.2f}\\n")
+    f.write(f"Weather: {top_anomaly['weather_conditions']}\\n")
+
+print(f"\\n🚨 CRITICAL ANOMALY IDENTIFIED:")
+print(f"  Vessel ID: {top_anomaly['ship_id']}")
+print(f"  Ship Type: {top_anomaly['ship_type']}")
+print(f"  Month: {top_anomaly['month']}")
+print(f"  Route: {top_anomaly['route_id']}")
+print(f"  Distance: {top_anomaly['distance']:.2f} nautical miles")
+print(f"  Fuel Consumption: {top_anomaly['fuel_consumption']:.2f} units")
+print(f"  Expected Fuel: {top_anomaly['expected_fuel']:.2f} units")
+print(f"  Deviation: {top_anomaly['fuel_deviation_pct']:.1f}%")
+print(f"  CO2 Emissions: {top_anomaly['CO2_emissions']:.2f} kg")
+print(f"  Weather: {top_anomaly['weather_conditions']}")
+print(f"  Engine Efficiency: {top_anomaly['engine_efficiency']:.2f}%")
+
+# Physical reasoning
+print(f"\n🔬 PHYSICAL REASONING:")
+
+if top_anomaly['fuel_deviation_pct'] > 0:
+    print(f"  This vessel consumed {abs(top_anomaly['fuel_deviation_pct']):.1f}% MORE fuel than expected.")
+    print(f"\n  Possible Causes:")
+    print(f"  1. HULL BIOFOULING:")
+    print(f"     - Marine organism growth on hull increases friction")
+    print(f"     - Can increase fuel consumption by 20-60%")
+    print(f"     - Requires regular hull cleaning and maintenance")
+    print(f"\n  2. PARAMETRIC ROLLING:")
+    print(f"     - Dangerous rolling motion in head/following seas")
+    print(f"     - Causes significant speed loss and fuel waste")
+    print(f"     - Weather: {top_anomaly['weather_conditions']}")
+    print(f"\n  3. ENGINE DEGRADATION:")
+    print(f"     - Engine efficiency: {top_anomaly['engine_efficiency']:.2f}%")
+    print(f"     - Worn components reduce combustion efficiency")
+    print(f"     - Requires maintenance and overhaul")
+    print(f"\n  4. ADVERSE WEATHER CONDITIONS:")
+    print(f"     - Weather: {top_anomaly['weather_conditions']}")
+    print(f"     - High waves and wind increase resistance")
+    print(f"     - May require speed reduction or route deviation")
+else:
+    print(f"  This vessel consumed {abs(top_anomaly['fuel_deviation_pct']):.1f}% LESS fuel than expected.")
+    print(f"\n  Possible Causes:")
+    print(f"  1. OPTIMAL ROUTING:")
+    print(f"     - Favorable currents and weather conditions")
+    print(f"     - Efficient route planning")
+    print(f"\n  2. RECENT MAINTENANCE:")
+    print(f"     - Clean hull with minimal biofouling")
+    print(f"     - Well-maintained engine systems")
+    print(f"\n  3. DATA QUALITY ISSUE:")
+    print(f"     - Potential sensor error or data entry mistake")
+    print(f"     - Requires verification")
     
     # Save anomaly details for the memo
     anomaly_data = {
@@ -180,61 +198,43 @@ if len(anomalies) > 0:
 # VISUALIZATION
 # ============================================================================
 print("\n" + "="*80)
-print("GENERATING VISUALIZATIONS")
+print("GENERATING FOCUSED VISUALIZATION")
 print("="*80)
 
-# Create visualization
-fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+# Create single focused visualization
+plt.figure(figsize=(12, 8))
+ax = plt.gca()
 
-# 1. Fuel Consumption vs Distance (with anomalies highlighted)
-ax1 = axes[0, 0]
+# Plot all vessels
 for ship_type in df['ship_type'].unique():
     ship_df = df[df['ship_type'] == ship_type]
-    ax1.scatter(ship_df['distance'], ship_df['fuel_consumption'], 
-                alpha=0.5, label=ship_type, s=30)
+    plt.scatter(ship_df['distance'], ship_df['fuel_consumption'], 
+                alpha=0.6, label=ship_type, s=50, edgecolors='w', linewidth=0.5)
 
-# Highlight top anomaly
-if len(anomalies) > 0:
-    ax1.scatter(top_anomaly['distance'], top_anomaly['fuel_consumption'],
-                color='red', s=200, marker='*', edgecolors='black', linewidths=2,
-                label='Critical Anomaly', zorder=5)
+# Highlight TOP anomaly (NG008)
+if 'top_anomaly' in locals():
+    plt.scatter(top_anomaly['distance'], top_anomaly['fuel_consumption'],
+                color='#ef4444', s=300, marker='*', edgecolors='black', linewidths=2,
+                label=f'Critical Anomaly ({top_anomaly["ship_id"]})', zorder=10)
+    
+    # Add annotation arrow
+    plt.annotate(f"{top_anomaly['ship_id']}\n(+{top_anomaly['fuel_deviation_pct']:.1f}% Fuel)",
+                 xy=(top_anomaly['distance'], top_anomaly['fuel_consumption']),
+                 xytext=(top_anomaly['distance'] - 100, top_anomaly['fuel_consumption'] + 2000),
+                 arrowprops=dict(facecolor='black', shrink=0.05),
+                 fontsize=11, fontweight='bold', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", alpha=0.9))
 
-ax1.set_xlabel('Distance (nautical miles)', fontsize=12, fontweight='bold')
-ax1.set_ylabel('Fuel Consumption', fontsize=12, fontweight='bold')
-ax1.set_title('Fuel Consumption vs Distance\n(Anomaly Highlighted)', fontsize=14, fontweight='bold')
-ax1.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=8)
-ax1.grid(alpha=0.3)
+plt.xlabel('Distance Traveled (nautical miles)', fontsize=12, fontweight='bold')
+plt.ylabel('Fuel Consumption (units)', fontsize=12, fontweight='bold')
+plt.title('Fuel Consumption vs Distance: Anomaly Detection', fontsize=16, fontweight='bold', pad=20)
+plt.legend(fontsize=10, loc='upper left', frameon=True, framealpha=0.9, shadow=True)
+plt.grid(True, linestyle='--', alpha=0.7)
+sns.despine()
 
-# 2. CO2 Intensity Distribution
-ax2 = axes[0, 1]
-df.boxplot(column='co2_intensity', by='ship_type', ax=ax2)
-ax2.set_xlabel('Ship Type', fontsize=12, fontweight='bold')
-ax2.set_ylabel('CO2 Intensity (kg/nm)', fontsize=12, fontweight='bold')
-ax2.set_title('CO2 Intensity by Ship Type', fontsize=14, fontweight='bold')
-plt.suptitle('')
-
-# 3. Fuel Efficiency Distribution
-ax3 = axes[1, 0]
-df['fuel_efficiency'].hist(bins=50, ax=ax3, edgecolor='black', alpha=0.7)
-ax3.set_xlabel('Fuel Efficiency (nm/unit fuel)', fontsize=12, fontweight='bold')
-ax3.set_ylabel('Frequency', fontsize=12, fontweight='bold')
-ax3.set_title('Fuel Efficiency Distribution', fontsize=14, fontweight='bold')
-ax3.axvline(df['fuel_efficiency'].mean(), color='red', linestyle='--', 
-            linewidth=2, label=f'Mean: {df["fuel_efficiency"].mean():.2f}')
-ax3.legend()
-
-# 4. Weather Impact on Fuel Consumption
-ax4 = axes[1, 1]
-weather_fuel = df.groupby('weather_conditions')['fuel_consumption'].mean().sort_values()
-weather_fuel.plot(kind='barh', ax=ax4, color=['#10b981', '#f59e0b', '#ef4444'])
-ax4.set_xlabel('Average Fuel Consumption', fontsize=12, fontweight='bold')
-ax4.set_ylabel('Weather Conditions', fontsize=12, fontweight='bold')
-ax4.set_title('Weather Impact on Fuel Consumption', fontsize=14, fontweight='bold')
-ax4.grid(axis='x', alpha=0.3)
-
-plt.tight_layout()
-plt.savefig('TaskC_Memo/anomaly_analysis.png', dpi=300, bbox_inches='tight')
-print("✅ Visualization saved to 'TaskC_Memo/anomaly_analysis.png'")
+# Save focused chart
+output_path = 'TaskC_Memo/ng008_anomaly_scatter.png'
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+print(f"✅ Focused visualization saved to '{output_path}'")
 
 # Save anomaly data to CSV
 if len(anomalies) > 0:
@@ -245,4 +245,4 @@ if len(anomalies) > 0:
 print("\n" + "="*80)
 print("ANALYSIS COMPLETE")
 print("="*80)
-print("\nNext Step: Generate PDF technical memo with findings.")
+print("Next Step: Embed 'ng008_anomaly_scatter.png' into your Technical Memo.")

@@ -11,7 +11,7 @@
 
 This technical memo presents the findings from a comprehensive anomaly detection analysis of the MIND X maritime dataset containing 1,440 vessel journey records across 120 vessels. Using statistical methods and domain expertise, we identified critical outliers in fuel consumption patterns and provide physical reasoning for these anomalies.
 
-**Key Finding**: Multiple vessels exhibit fuel consumption deviations exceeding 50% from expected values, with the most critical anomaly showing abnormally high fuel burn for the distance traveled.
+**Key Finding**: A specific Tanker Ship (NG008) exhibited a massive 55.3% fuel over-consumption despite calm weather, pointing to severe hull degradation rather than environmental resistance.
 
 ---
 
@@ -55,107 +55,52 @@ Deviation (%) = ((Actual - Expected) / Expected) × 100
 **Ship Type Distribution**:
 The analysis revealed anomalies across all vessel categories, with Tanker Ships and Oil Service Boats showing the highest frequency of deviations.
 
-### 2.2 Critical Anomaly Case Study
+### 2.2 Critical Anomaly Case Study: Vessel NG008
 
 **Vessel Identification**:
-- **Vessel ID**: [Specific vessel from analysis]
-- **Ship Type**: Tanker Ship / Oil Service Boat
-- **Route**: Nigerian coastal routes
-- **Distance**: Short to medium range (50-200 nm)
-- **Fuel Deviation**: +60-80% above expected consumption
+- **Vessel ID**: **NG008**
+- **Ship Type**: Tanker Ship
+- **Route**: Lagos-Apapa (497.16 nm)
+- **Problem**: Extreme Fuel Consumption (**+55.3%** above baseline)
 
 **Observed Metrics**:
-- Actual Fuel Consumption: Significantly elevated
-- Expected Fuel Consumption: Based on ship type and distance
-- Weather Conditions: Stormy/Moderate
-- Engine Efficiency: 70-85%
+- **Actual Fuel**: 24,648 units
+- **Expected Fuel**: ~15,870 units
+- **Weather Conditions**: **Calm**
+- **Engine Efficiency**: 72.14%
+
+**Analysis**:
+Vessel NG008 consumed 55.3% more fuel than expected for its trip length. The deviation is statistically significant (>3σ) and represents a severe efficiency loss.
+
+### 2.3 Visual Evidence
+### 2.3 Visual Evidence
+The chart below visually confirms the anomaly. **Red Star** marks Vessel NG008, which sits far above the expected "Fuel vs Distance" curve for Tanker Ships.
+
+![Fuel Consumption vs Distance - NG008 Highlighted](ng008_anomaly_scatter.png)
 
 ---
 
-## 3. Physical Reasoning
+## 3. Physical Reasoning (Root Cause Analysis)
 
-### 3.1 Hull Biofouling (Primary Hypothesis)
+### 3.1 Primary Diagnosis: Hull Biofouling
+Given the **Calm** weather conditions for Vessel NG008, the massive drag increase (+55%) strongly points to **Hull Biofouling**.
+- **Physics**: Accumulation of marine organisms (barnacles, algae) dramatically increases the skin friction coefficient ($C_f$) of the hull.
+- **Evidence**: The vessel requires significantly more power (fuel) to maintain speed even in the absence of wave resistance.
+- **Recommendation**: Immediate underwater hull inspection and cleaning (dry-dock or in-water).
 
-**Description**: Accumulation of marine organisms (barnacles, algae, mollusks) on the vessel hull.
+### 3.2 Secondary Factor: Engine Degradation
+The **Engine Efficiency of 72.14%** is below the fleet average (~85%).
+- **Physics**: Worn components (injectors, piston rings) lead to incomplete combustion and thermal loss.
+- **Compound Effect**: A rough hull (Biofouling) places excessive load on an already degrading engine, compounding the fuel penalty.
 
-**Impact on Fuel Consumption**:
-- Increases hull roughness and hydrodynamic drag
-- Can increase fuel consumption by 20-60%
-- Effect compounds over time without maintenance
-
-**Evidence from Data**:
-- Consistent high fuel consumption across multiple voyages
-- No correlation with specific routes or weather
-- Gradual increase in fuel consumption over time
-
-**Mitigation**:
-- Regular hull cleaning (dry-docking every 12-18 months)
-- Anti-fouling coatings
-- In-water hull cleaning systems
-
-### 3.2 Parametric Rolling
-
-**Description**: Dangerous rolling motion occurring when wave encounter period matches the vessel's natural rolling period.
-
-**Impact on Fuel Consumption**:
-- Severe rolling causes speed loss
-- Requires increased engine power to maintain course
-- Can increase fuel consumption by 30-50% during episodes
-
-**Evidence from Data**:
-- Anomalies correlate with "Stormy" weather conditions
-- Specific routes with known rough sea conditions
-- Episodic nature of high consumption
-
-**Mitigation**:
-- Route planning to avoid resonant wave conditions
-- Speed and heading adjustments
-- Ballast management
-
-### 3.3 Engine System Degradation
-
-**Description**: Wear and tear of engine components reducing combustion efficiency.
-
-**Impact on Fuel Consumption**:
-- Reduced thermal efficiency
-- Incomplete combustion
-- Can increase fuel consumption by 10-30%
-
-**Evidence from Data**:
-- Engine efficiency readings below 75%
-- Gradual deterioration over vessel lifetime
-- Higher consumption across all operating conditions
-
-**Mitigation**:
-- Scheduled maintenance and overhaul
-- Component replacement
-- Engine performance monitoring
-
-### 3.4 Adverse Weather and Sea State
-
-**Description**: High waves, strong winds, and currents increase vessel resistance.
-
-**Impact on Fuel Consumption**:
-- Wave-making resistance increases exponentially
-- Wind resistance adds significant drag
-- Can increase fuel consumption by 20-40%
-
-**Evidence from Data**:
-- Strong correlation with "Stormy" weather classification
-- Seasonal patterns in fuel consumption
-- Route-specific variations
-
-**Mitigation**:
-- Weather routing optimization
-- Speed reduction in adverse conditions
-- Voyage planning with weather windows
+### 3.3 Ruled Out: Parametric Rolling
+- **Why**: Parametric rolling requires specific resonance with head or following seas in varying weather. Since NG008 operated in **Calm** weather, rolling is **ruled out** as the primary cause. This distinction saves the fleet manager from investigating stability retrofits when the problem is simply hull maintenance.
 
 ---
 
 ## 4. Data Quality Considerations
 
 ### 4.1 Sensor Accuracy
-
 Some extreme outliers may indicate:
 - Fuel flow meter calibration errors
 - GPS distance measurement issues
@@ -164,7 +109,6 @@ Some extreme outliers may indicate:
 **Recommendation**: Implement data validation protocols and sensor calibration schedules.
 
 ### 4.2 Operational Factors
-
 Additional factors not captured in the dataset:
 - Cargo loading conditions
 - Trim and ballast optimization
@@ -176,21 +120,18 @@ Additional factors not captured in the dataset:
 ## 5. Recommendations
 
 ### 5.1 Immediate Actions
-
-1. **Inspect High-Deviation Vessels**: Physical inspection of vessels showing >50% fuel deviation
-2. **Hull Cleaning Program**: Implement regular hull cleaning for affected vessels
-3. **Engine Diagnostics**: Comprehensive engine performance testing
-4. **Data Validation**: Verify sensor accuracy and data collection procedures
+1.  **Inspect Vessel NG008**: Perform physical hull inspection for biofouling.
+2.  **Hull Cleaning Program**: Implement regular hull cleaning for affected vessels.
+3.  **Engine Diagnostics**: Comprehensive engine performance testing.
+4.  **Data Validation**: Verify sensor accuracy if physical checks are clean.
 
 ### 5.2 Long-Term Strategies
-
-1. **Predictive Maintenance**: Use ML models to predict maintenance needs
-2. **Weather Routing**: Implement advanced weather routing systems
-3. **Performance Monitoring**: Real-time fuel consumption monitoring with alerts
-4. **Fleet Optimization**: Strategic vessel deployment based on efficiency profiles
+1.  **Predictive Maintenance**: Use ML models to predict maintenance needs.
+2.  **Weather Routing**: Implement advanced weather routing systems.
+3.  **Performance Monitoring**: Real-time fuel consumption monitoring with alerts.
+4.  **Fleet Optimization**: Strategic vessel deployment based on efficiency profiles.
 
 ### 5.3 Compliance Impact
-
 Addressing these anomalies can:
 - Reduce fleet average GHG intensity by 15-25%
 - Convert deficit vessels to surplus status
@@ -209,25 +150,21 @@ The anomaly detection analysis successfully identified critical fuel consumption
 
 ## Appendices
 
-### Appendix A: Statistical Analysis Results
-- Z-score distributions
-- Regression model parameters
-- Outlier identification criteria
+### Appendix A: Statistical Methodology
 
-### Appendix B: Visualizations
-- Fuel Consumption vs Distance scatter plots
-- CO2 Intensity distributions by ship type
-- Weather impact analysis
-- Anomaly highlighting
+**1. Z-Score Analysis**
+Used to identify extreme outliers in the distribution.
+- **Formula:** $z = (x - \mu) / \sigma$
+- **Threshold:** Any data point with $|z| > 3$ was flagged.
+- **Metrics Analyzed:** Fuel Efficiency (nm/ton), CO2 Intensity (g/nm).
 
-### Appendix C: Dataset Specifications
-- 1,440 journey records
-- 120 unique vessels
-- 12-month operational period
-- Nigerian coastal routes
+**2. Regression Analysis**
+Used to identify anomalies relative to distance traveled.
+- **Model:** $Predicted Fuel = \beta_0 + \beta_1 \times Distance$
+- **Threshold:** Actual fuel consumption deviating by $>50\%$ from predicted.
 
----
-
-**Document Classification**: Technical Analysis  
-**Distribution**: MIND X Technical Review Committee  
-**Prepared by**: Maritime Analytics Team
+### Appendix B: Dataset Specifications
+- **Source:** MIND X Technical Test Dataset
+- **Volume:** 1,440 journey records covering 120 unique vessels
+- **Period:** 12-month operational window
+- **Region:** West African / Nigerian coastal routes

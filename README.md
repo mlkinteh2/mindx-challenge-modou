@@ -32,8 +32,8 @@ mindx-challenge-modou/
 ├── TaskC_Memo/
 │   ├── anomaly_detection.py         # Anomaly analysis script
 │   ├── anomaly_analysis.png         # Visualization
-│   ├── anomalies_detected.csv       # Detected anomalies
-│   └── Technical_Memo.pdf           # Final technical report
+│   ├── ng008_anomaly_scatter.png    # Highlighted outlier scatter plot
+│   └── Technical_Memo.md            # Final technical research report
 └── README.md
 ```
 
