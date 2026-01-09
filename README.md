@@ -256,48 +256,9 @@ POST /api/predict                  # Predict CO2 emissions
 - **Data-Driven Decisions**: Real-time compliance monitoring
 - **Regulatory Compliance**: Meeting FuelEU Maritime requirements
 
----
-
-## 🔮 Future Enhancements
-
-1. **Real-time Data Integration**: Connect to vessel IoT sensors
-2. **Advanced ML Models**: Deep learning for better predictions
-3. **Route Optimization**: AI-powered route planning
-4. **Mobile App**: Native iOS/Android applications
-5. **Blockchain Integration**: Transparent compliance tracking
-6. **Weather API**: Real-time weather data integration
-
----
-
-## 📝 License
-
-This project was created for the MIND X Technical Challenge.
-
----
-
 ## 👤 Author
 
 **Modou**
-- Challenge: MIND X Technical Test
-- Date: January 2026
-- Theme: From Digitization to Algorithmic Intelligence
-
----
-
-## 🙏 Acknowledgments
-
-- MIND X for the challenging and insightful technical test
-- Maritime industry for the inspiration
-- Open-source community for the amazing tools and libraries
-
----
-
-## 📞 Contact
-
-For questions or feedback about this project, please reach out through the MIND X recruitment process.
-
----
 
 
-**Built with ❤️ for a sustainable maritime future** 🌊
 
