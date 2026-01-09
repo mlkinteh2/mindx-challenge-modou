@@ -1,4 +1,6 @@
 # MIND X Technical Challenge - Maritime Compliance System
+<img width="1835" height="877" alt="image" src="https://github.com/user-attachments/assets/db66383e-5fb8-4237-88a2-598ede2c0e5a" />
+
 
 ## 🚢 Project Overview
 
@@ -295,5 +297,6 @@ This project was created for the MIND X Technical Challenge.
 For questions or feedback about this project, please reach out through the MIND X recruitment process.
 
 ---
+
 
 **Built with ❤️ for a sustainable maritime future** 🌊
